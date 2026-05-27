@@ -1,0 +1,14 @@
+.navbar {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+
+  .navbar-brand {
+    color: var(--color-primary);
+    font-weight: 600;
+
+    &:hover {
+      color: var(--color-primary);
+      opacity: 0.85;
+    }
+  }
+}

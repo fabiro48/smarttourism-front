@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand" routerLink="/experiences">Smart Tourism</a>
+
+    <!-- Toggler mobile -->
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+
+        @if (!isAuthenticated) {
+          <!-- Usuario NO autenticado -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/auth/login"
+               routerLinkActive="active">Iniciar sesión</a>
+          </li>
+        } @else {
+          <!-- Usuario autenticado -->
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/experiences"
+               routerLinkActive="active">Experiencias</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/reservations"
+               routerLinkActive="active">Reservas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/reviews"
+               routerLinkActive="active">Reseñas</a>
+          </li>
+          @if (isAdmin) {
+            <!-- Solo ADMIN -->
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/admin"
+                 routerLinkActive="active">Admin</a>
+            </li>
+          }
+          <li class="nav-item">
+            <button class="btn btn-outline btn-sm" (click)="onLogout()">
+              Cerrar sesión
+            </button>
+          </li>
+        }
+
+      </ul>
+    </div>
+  </div>
+</nav>
