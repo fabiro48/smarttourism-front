@@ -18,17 +18,21 @@ export class RegisterComponent {
   private router = inject(Router);
 
   form: FormGroup = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
+    fullName: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    phone: ['', [Validators.required, Validators.minLength(7)]],
+    documentNumber: ['', [Validators.required, Validators.minLength(5)]]
   });
 
   isLoading = false;
   errorMessage = '';
 
-  get name() { return this.form.get('name')!; }
+  get fullName() { return this.form.get('fullName')!; }
   get email() { return this.form.get('email')!; }
   get password() { return this.form.get('password')!; }
+  get phone() { return this.form.get('phone')!; }
+  get documentNumber() { return this.form.get('documentNumber')!; }
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -39,9 +43,9 @@ export class RegisterComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { name, email, password } = this.form.value;
+    const { fullName, email, password, phone, documentNumber } = this.form.value;
 
-    this.authService.registerHttp(name, email, password).subscribe({
+    this.authService.registerHttp(fullName, email, password, phone, documentNumber).subscribe({
       next: (res) => {
         this.authService.login(res.token);
         this.router.navigate(['/experiences']);

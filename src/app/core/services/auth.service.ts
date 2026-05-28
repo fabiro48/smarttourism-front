@@ -11,7 +11,7 @@ const TOKEN_KEY = 'auth_token';
 /** Payload decodificado del JWT (campos relevantes para el frontend) */
 export interface JwtPayload {
   sub: string;       // email / username
-  role: string;      // 'USER' | 'ADMIN'
+  role: string;      // 'TOURIST' | 'ADMIN'
   exp: number;       // Unix timestamp de expiración
   iat: number;       // Unix timestamp de emisión
 }
@@ -104,8 +104,8 @@ export class AuthService {
    * Realiza la petición de registro al backend.
    * El componente es responsable de llamar a this.login(token) con la respuesta.
    */
-  registerHttp(name: string, email: string, password: string): Observable<AuthResponse> {
-    const body: RegisterRequest = { name, email, password };
+  registerHttp(fullName: string, email: string, password: string, phone: string, documentNumber: string): Observable<AuthResponse> {
+    const body: RegisterRequest = { fullName, email, password, phone, documentNumber };
     return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, body);
   }
 }
