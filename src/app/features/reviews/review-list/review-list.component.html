@@ -1,0 +1,24 @@
+<section class="review-list">
+  <h2>Reseñas</h2>
+
+  @if (isLoading) {
+    <div class="spinner">Cargando reseñas...</div>
+  } @else if (errorMessage) {
+    <p role="alert" class="error-message">{{ errorMessage }}</p>
+  } @else if (reviews.length === 0) {
+    <p class="empty-message">Aún no hay reseñas para esta experiencia</p>
+  } @else {
+    @for (review of reviews; track review.id) {
+      <article class="review-card">
+        <div class="review-header">
+          <span class="tourist-name">{{ review.touristName }}</span>
+          <span class="review-date">{{ review.createdAt | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <app-star-rating [rating]="review.rating" [readonly]="true" />
+        @if (review.comment) {
+          <p class="review-comment">{{ review.comment }}</p>
+        }
+      </article>
+    }
+  }
+</section>

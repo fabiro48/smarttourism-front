@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -6,16 +6,22 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ExperiencesService } from '../services/experiences.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ExperienceResponse } from '../models/experience.model';
+import { ReviewListComponent } from '../../reviews/review-list/review-list.component';
+import { ReviewFormComponent } from '../../reviews/review-form/review-form.component';
+import { ReviewStatisticsComponent } from '../../reviews/review-statistics/review-statistics.component';
+import { ReviewResponse } from '../../reviews/models/review.model';
 
 @Component({
   selector: 'app-experience-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ReviewListComponent, ReviewFormComponent, ReviewStatisticsComponent],
   templateUrl: './experience-detail.component.html',
   styleUrl: './experience-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExperienceDetailComponent implements OnInit {
+  @ViewChild('reviewList') reviewList!: ReviewListComponent;
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private experiencesService = inject(ExperiencesService);
@@ -79,5 +85,18 @@ export class ExperienceDetailComponent implements OnInit {
         this.cdr.markForCheck();
       },
     });
+  }
+
+  onReviewCreated(review: ReviewResponse): void {
+    if (this.reviewList) {
+      this.reviewList.addReview(review);
+    }
+    if (this.experience) {
+      this.experience.reviewCount++;
+      const oldCount = this.experience.reviewCount - 1;
+      const oldAvg = this.experience.averageRating ?? 0;
+      this.experience.averageRating = (oldAvg * oldCount + review.rating) / this.experience.reviewCount;
+      this.cdr.markForCheck();
+    }
   }
 }

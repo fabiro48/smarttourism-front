@@ -1,0 +1,41 @@
+@if (!isHidden) {
+  <div class="review-form-container">
+    <h3>Deja tu reseña</h3>
+
+    <form (ngSubmit)="onSubmit()" #reviewForm="ngForm">
+      <div class="form-group">
+        <label id="rating-label">Calificación</label>
+        <app-star-rating
+          [rating]="rating"
+          [readonly]="false"
+          (ratingChange)="onRatingChange($event)"
+          aria-labelledby="rating-label"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="review-comment">Comentario (opcional)</label>
+        <textarea
+          id="review-comment"
+          [(ngModel)]="comment"
+          name="comment"
+          rows="3"
+          placeholder="Comparte tu experiencia..."
+        ></textarea>
+      </div>
+
+      @if (errorMessage) {
+        <p role="alert" class="error-message">{{ errorMessage }}</p>
+      }
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="rating === 0 || isSubmitting"
+        [attr.aria-disabled]="rating === 0 || isSubmitting"
+      >
+        {{ isSubmitting ? 'Enviando...' : 'Enviar reseña' }}
+      </button>
+    </form>
+  </div>
+}

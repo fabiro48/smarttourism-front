@@ -1,0 +1,9 @@
+<div class="review-statistics">
+  @if (averageRating !== null) {
+    <app-star-rating [rating]="roundedRating" [readonly]="true" />
+    <span class="rating-value">{{ averageRating | number:'1.1-1' }}</span>
+    <span class="review-count">({{ reviewCount }} reseña{{ reviewCount !== 1 ? 's' : '' }})</span>
+  } @else {
+    <span class="no-reviews">Sin reseñas aún</span>
+  }
+</div>

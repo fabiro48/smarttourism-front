@@ -1,0 +1,23 @@
+.review-statistics {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rating-value {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.review-count {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.no-reviews {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  font-style: italic;
+}

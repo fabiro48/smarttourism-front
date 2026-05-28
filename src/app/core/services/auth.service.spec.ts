@@ -250,13 +250,13 @@ describe('AuthService', () => {
       const password = 'password123';
       const mockResponse = { token: 'fake-jwt-token' };
 
-      service.registerHttp(name, email, password, '3001234567', '123456789').subscribe(res => {
+      service.registerHttp(name, email, password, '3001234567', 'CC123456').subscribe(res => {
         expect(res).toEqual(mockResponse);
       });
 
       const req = httpTesting.expectOne(`${environment.apiUrl}/auth/register`);
       expect(req.request.method).toBe('POST');
-      expect(req.request.body).toEqual({ fullName: name, email, password, phone: '3001234567', documentNumber: '123456789' });
+      expect(req.request.body).toEqual({ fullName: name, email, password, phone: '3001234567', documentNumber: 'CC123456' });
       req.flush(mockResponse);
     });
 
@@ -265,7 +265,7 @@ describe('AuthService', () => {
       const mockToken = 'eyJhbGciOiJIUzI1NiJ9.test.signature';
       let receivedToken: string | undefined;
 
-      service.registerHttp('Jane', 'jane@test.com', 'pass123', '3001234567', '123456789').subscribe(res => {
+      service.registerHttp('Jane', 'jane@test.com', 'pass123', '3009876543', 'CC654321').subscribe(res => {
         receivedToken = res.token;
       });
 
@@ -279,7 +279,7 @@ describe('AuthService', () => {
       // Validates: Requirement 5.6
       let errorReceived = false;
 
-      service.registerHttp('Jane', 'existing@test.com', 'pass123', '3001234567', '123456789').subscribe({
+      service.registerHttp('Jane', 'existing@test.com', 'pass123', '3009876543', 'CC654321').subscribe({
         next: () => {},
         error: () => { errorReceived = true; }
       });
@@ -445,7 +445,7 @@ describe('P4 — Invariante de token tras login exitoso', () => {
     const expectedToken = 'eyJhbGciOiJIUzI1NiJ9.registerpayload.sig';
     let receivedToken: string | undefined;
 
-    service.registerHttp('Jane', 'jane@test.com', 'pass123', '3001234567', '123456789').subscribe(res => {
+    service.registerHttp('Jane', 'jane@test.com', 'pass123', '3009876543', 'CC654321').subscribe(res => {
       receivedToken = res.token;
       service.login(res.token);
     });
@@ -549,7 +549,7 @@ describe('P5 — Invariante de navegación tras autenticación', () => {
 
     it('navega a /experiences cuando el backend responde con 200 y token', () => {
       // Validates: Requirement 2.9
-      component.form.setValue({ fullName: 'Jane Doe', email: 'jane@test.com', password: 'password123', phone: '3001234567', documentNumber: '123456789' });
+      component.form.setValue({ name: 'Jane Doe', email: 'jane@test.com', password: 'password123' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);
@@ -560,7 +560,7 @@ describe('P5 — Invariante de navegación tras autenticación', () => {
 
     it('no navega si el backend responde con error', () => {
       // Validates: Requirement 2.9
-      component.form.setValue({ fullName: 'Jane Doe', email: 'jane@test.com', password: 'password123', phone: '3001234567', documentNumber: '123456789' });
+      component.form.setValue({ name: 'Jane Doe', email: 'jane@test.com', password: 'password123' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);
@@ -660,7 +660,7 @@ describe('P6 — Invariante de mensaje de error', () => {
 
     it('error 409: errorMessage no vacío e isLoading false', () => {
       // Validates: Requirement 2.10
-      component.form.setValue({ fullName: 'Jane Doe', email: 'existing@test.com', password: 'password123', phone: '1234567', documentNumber: '12345' });
+      component.form.setValue({ name: 'Jane', email: 'existing@test.com', password: 'password123' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);
@@ -673,7 +673,7 @@ describe('P6 — Invariante de mensaje de error', () => {
 
     it('error 400: errorMessage no vacío e isLoading false', () => {
       // Validates: Requirement 2.11
-      component.form.setValue({ fullName: 'Jane Doe', email: 'jane@test.com', password: 'password123', phone: '1234567', documentNumber: '12345' });
+      component.form.setValue({ name: 'Jane', email: 'jane@test.com', password: 'password123' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);
@@ -686,7 +686,7 @@ describe('P6 — Invariante de mensaje de error', () => {
 
     it('error 500: errorMessage no vacío e isLoading false', () => {
       // Validates: Requirement 2.12
-      component.form.setValue({ fullName: 'Jane Doe', email: 'jane@test.com', password: 'password123', phone: '1234567', documentNumber: '12345' });
+      component.form.setValue({ name: 'Jane', email: 'jane@test.com', password: 'password123' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);

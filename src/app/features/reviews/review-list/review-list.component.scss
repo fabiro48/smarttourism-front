@@ -1,0 +1,54 @@
+.review-list {
+  margin-top: 2rem;
+
+  h2 {
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+}
+
+.spinner {
+  padding: 1rem;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.error-message {
+  color: var(--color-error);
+  padding: 0.75rem;
+}
+
+.empty-message {
+  color: var(--color-muted);
+  padding: 1rem 0;
+}
+
+.review-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.tourist-name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.review-date {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.review-comment {
+  margin-top: 0.5rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}

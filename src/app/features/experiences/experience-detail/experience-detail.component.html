@@ -42,13 +42,10 @@
       <p class="price">Precio: {{ experience.price | currency:'COP':'symbol':'1.0-0' }}</p>
 
       <!-- Calificación y reseñas -->
-      <p class="rating">
-        @if (experience.averageRating !== null) {
-          {{ experience.averageRating | number:'1.1-1' }} ({{ experience.reviewCount }} reseñas)
-        } @else {
-          Sin reseñas aún
-        }
-      </p>
+      <app-review-statistics
+        [averageRating]="experience.averageRating"
+        [reviewCount]="experience.reviewCount"
+      />
 
       <!-- Horarios -->
       <section class="schedules">
@@ -84,6 +81,20 @@
           }
         }
       </section>
+
+      <!-- Reseñas -->
+      <app-review-list
+        #reviewList
+        [experienceId]="experience.id"
+      />
+
+      <!-- Formulario de reseña (solo TOURIST autenticado) -->
+      @if (isTourist) {
+        <app-review-form
+          [experienceId]="experience.id"
+          (reviewCreated)="onReviewCreated($event)"
+        />
+      }
 
       <a routerLink="/experiences" class="btn-outline">Volver al listado</a>
     </article>
