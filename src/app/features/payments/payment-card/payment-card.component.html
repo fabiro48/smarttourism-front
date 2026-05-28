@@ -1,0 +1,19 @@
+<div
+  class="payment-card"
+  role="article"
+  [attr.aria-label]="'Pago de ' + displayTitle + ' - ' + statusLabel"
+>
+  <div class="card-header">
+    <h3 class="experience-title">{{ displayTitle }}</h3>
+    <span class="status-badge" [ngClass]="statusClass">{{ statusLabel }}</span>
+  </div>
+
+  <div class="card-body">
+    <p class="location">📍 {{ payment.experienceLocation }}</p>
+    <p class="date">📅 {{ payment.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+    <p class="reservation-date">🗓️ {{ payment.reservationDate | date:'dd/MM/yyyy' }}</p>
+    <p class="quantity">👥 {{ payment.quantity }} {{ payment.quantity === 1 ? 'cupo' : 'cupos' }}</p>
+    <p class="amount">💰 {{ payment.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+    <p class="reference">🔖 {{ payment.transactionReference }}</p>
+  </div>
+</div>

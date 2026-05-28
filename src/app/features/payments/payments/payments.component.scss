@@ -1,0 +1,198 @@
+:host {
+  display: block;
+  background: var(--color-bg);
+  min-height: 100vh;
+}
+
+main {
+  background: var(--color-bg);
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
+
+h2 {
+  margin-bottom: 1rem;
+  color: var(--color-text);
+  font-size: 1.25rem;
+}
+
+// Button styles
+.btn-primary {
+  background: var(--color-primary);
+  border-radius: var(--radius-control);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-block;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  color: var(--color-text);
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+
+  &:hover {
+    background: var(--color-bg);
+  }
+}
+
+// Loading state
+.spinner {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-muted);
+  font-size: 1.1rem;
+}
+
+// Error state
+.error-message {
+  color: var(--color-error);
+  padding: 1rem;
+  text-align: center;
+}
+
+// Empty state
+.empty-message {
+  color: var(--color-muted);
+  padding: 3rem;
+  text-align: center;
+  font-size: 1rem;
+
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+// Payments list
+.payments-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+// Payment feedback messages
+.payment-message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-control);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+
+  &.success {
+    background: color-mix(in srgb, var(--color-success) 15%, transparent);
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+  }
+
+  &.warning {
+    background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+  }
+
+  &.error {
+    background: color-mix(in srgb, var(--color-error) 15%, transparent);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+  }
+}
+
+// Pending reservations section
+.pending-section {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.pending-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.pending-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pending-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pending-title {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.pending-date,
+.pending-quantity {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.pending-amount {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+// Confirmation dialog
+.confirm-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background: var(--color-surface);
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius-card);
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+
+  p {
+    color: var(--color-text);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .confirm-dialog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+}

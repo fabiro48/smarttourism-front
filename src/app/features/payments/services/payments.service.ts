@@ -10,6 +10,15 @@ export class PaymentsService {
   private baseUrl = `${environment.apiUrl}/payments`;
 
   /**
+   * Obtiene el historial de pagos del turista autenticado.
+   * Realiza GET a /api/v1/payments/me.
+   * Los errores HTTP se propagan sin transformar (authInterceptor maneja 401 globalmente).
+   */
+  getMyPayments(): Observable<PaymentResponse[]> {
+    return this.http.get<PaymentResponse[]>(`${this.baseUrl}/me`);
+  }
+
+  /**
    * Simula un pago para una reserva dada.
    * Realiza POST a /api/v1/payments/simulate con el reservationId en el body.
    * Los errores HTTP se propagan sin transformar.

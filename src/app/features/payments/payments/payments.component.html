@@ -1,1 +1,88 @@
-<h1>Pagos</h1>
+<main [attr.aria-busy]="isLoading ? 'true' : null">
+  <h1>Mis Pagos</h1>
+
+  <!-- Payment feedback message -->
+  @if (paymentMessage) {
+    <div
+      class="payment-message"
+      [class.success]="paymentMessageType === 'success'"
+      [class.warning]="paymentMessageType === 'warning'"
+      [class.error]="paymentMessageType === 'error'"
+      role="alert"
+    >
+      {{ paymentMessage }}
+    </div>
+  }
+
+  <!-- Loading state -->
+  @if (isLoading) {
+    <div class="spinner" aria-busy="true">Cargando...</div>
+  }
+
+  <!-- Error state -->
+  @else if (errorMessage) {
+    <p role="alert" class="error-message">{{ errorMessage }}</p>
+    <button class="btn-primary" (click)="loadData()">Reintentar</button>
+  }
+
+  <!-- Empty state -->
+  @else if (payments.length === 0) {
+    <div class="empty-message">
+      <p>No tienes pagos registrados aún.</p>
+    </div>
+  }
+
+  <!-- Payments list -->
+  @else {
+    <div class="payments-list">
+      @for (payment of payments; track payment.id) {
+        <app-payment-card [payment]="payment" />
+      }
+    </div>
+  }
+
+  <!-- Pending reservations section -->
+  @if (!isLoading && !errorMessage && pendingReservations.length > 0) {
+    <section class="pending-section">
+      <h2>Reservas pendientes de pago</h2>
+      <div class="pending-list">
+        @for (reservation of pendingReservations; track reservation.id) {
+          <div class="pending-card">
+            <div class="pending-card-info">
+              <span class="pending-title">{{ reservation.experienceTitle }}</span>
+              <span class="pending-date">{{ reservation.reservationDate | date:'dd/MM/yyyy' }}</span>
+              <span class="pending-quantity">{{ reservation.quantity }} persona(s)</span>
+              <span class="pending-amount">{{ reservation.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+            </div>
+            <button
+              class="btn-primary"
+              [disabled]="paymentLoading === reservation.id"
+              (click)="onPay(reservation.id)"
+            >
+              @if (paymentLoading === reservation.id) {
+                Procesando...
+              } @else {
+                Pagar
+              }
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Payment confirmation dialog -->
+  @if (confirmPayId) {
+    <div class="confirm-dialog-overlay">
+      <div role="dialog" aria-modal="true" aria-label="Confirmar pago" class="confirm-dialog">
+        @if (getReservationForPay(); as reservation) {
+          <p>¿Confirmar pago de {{ reservation.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }} para {{ reservation.experienceTitle }}?</p>
+        }
+        <div class="confirm-dialog-actions">
+          <button (click)="onConfirmPay()" class="btn-primary">Confirmar</button>
+          <button (click)="onDismissPayDialog()" class="btn-secondary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
+</main>
