@@ -41,6 +41,18 @@
       </p>
       <p class="price">Precio: {{ experience.price | currency:'COP':'symbol':'1.0-0' }}</p>
 
+      <!-- Ubicación (Mapa) -->
+      <section class="map-section">
+        <h2>Ubicación</h2>
+        <div class="map-container">
+          <app-map
+            [mode]="'readonly'"
+            [latitude]="experience.latitude"
+            [longitude]="experience.longitude"
+          />
+        </div>
+      </section>
+
       <!-- Calificación y reseñas -->
       <app-review-statistics
         [averageRating]="experience.averageRating"

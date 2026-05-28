@@ -83,6 +83,22 @@ textarea {
   animation: spin 0.6s linear infinite;
 }
 
+.map-section {
+  app-map {
+    display: block;
+    height: 350px;
+    border-radius: var(--radius-control);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+}
+
+.map-hint {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin: 0 0 0.5rem;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

@@ -24,6 +24,8 @@ export interface ExperienceResponse {
   averageRating: number | null;
   reviewCount: number;
   schedules: ScheduleResponse[];
+  latitude: number;
+  longitude: number;
 }
 
 export interface ExperienceRequest {
@@ -35,6 +37,8 @@ export interface ExperienceRequest {
   difficulty: Difficulty;
   price: number;
   images?: string[];
+  latitude: number;
+  longitude: number;
 }
 
 export interface ExperienceFilters {

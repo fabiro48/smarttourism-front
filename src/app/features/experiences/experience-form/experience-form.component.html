@@ -99,6 +99,52 @@
         <input id="exp-images" type="text" formControlName="images" placeholder="https://ejemplo.com/img1.jpg, https://ejemplo.com/img2.jpg" />
       </div>
 
+      <!-- Mapa de ubicación -->
+      <div class="form-field map-section">
+        <label>Ubicación en el mapa</label>
+        <p class="map-hint">Haz clic en el mapa para seleccionar la ubicación o ingresa las coordenadas manualmente.</p>
+        <app-map
+          [mode]="'edit'"
+          [latitude]="mapLatitude"
+          [longitude]="mapLongitude"
+          (coordinateSelected)="onCoordinateSelected($event)"
+        ></app-map>
+      </div>
+
+      <!-- Latitud -->
+      <div class="form-field">
+        <label for="exp-latitude">Latitud</label>
+        <input id="exp-latitude" type="number" formControlName="latitude" step="any" min="-90" max="90" />
+        @if (latitudeControl.invalid && latitudeControl.touched) {
+          <span class="error-msg">
+            @if (latitudeControl.errors?.['required']) {
+              La latitud es requerida
+            } @else if (latitudeControl.errors?.['min']) {
+              La latitud debe ser mayor o igual a -90
+            } @else if (latitudeControl.errors?.['max']) {
+              La latitud debe ser menor o igual a 90
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Longitud -->
+      <div class="form-field">
+        <label for="exp-longitude">Longitud</label>
+        <input id="exp-longitude" type="number" formControlName="longitude" step="any" min="-180" max="180" />
+        @if (longitudeControl.invalid && longitudeControl.touched) {
+          <span class="error-msg">
+            @if (longitudeControl.errors?.['required']) {
+              La longitud es requerida
+            } @else if (longitudeControl.errors?.['min']) {
+              La longitud debe ser mayor o igual a -180
+            } @else if (longitudeControl.errors?.['max']) {
+              La longitud debe ser menor o igual a 180
+            }
+          </span>
+        }
+      </div>
+
       <!-- Error del backend -->
       @if (errorMessage) {
         <p class="error-msg" role="alert">{{ errorMessage }}</p>

@@ -10,11 +10,12 @@ import { ReviewListComponent } from '../../reviews/review-list/review-list.compo
 import { ReviewFormComponent } from '../../reviews/review-form/review-form.component';
 import { ReviewStatisticsComponent } from '../../reviews/review-statistics/review-statistics.component';
 import { ReviewResponse } from '../../reviews/models/review.model';
+import { MapComponent } from '../../../shared/components/map/map.component';
 
 @Component({
   selector: 'app-experience-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ReviewListComponent, ReviewFormComponent, ReviewStatisticsComponent],
+  imports: [CommonModule, RouterLink, FormsModule, ReviewListComponent, ReviewFormComponent, ReviewStatisticsComponent, MapComponent],
   templateUrl: './experience-detail.component.html',
   styleUrl: './experience-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

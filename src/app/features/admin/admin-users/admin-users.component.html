@@ -1,0 +1,103 @@
+<main>
+  <h1>Gestión de Usuarios</h1>
+
+  <!-- Loading state -->
+  @if (isLoading) {
+    <div class="spinner">Cargando...</div>
+  }
+
+  <!-- Error state (only show alone when no users loaded) -->
+  @else if (errorMessage && users.length === 0) {
+    <p role="alert" class="error-message">{{ errorMessage }}</p>
+  }
+
+  <!-- Empty state -->
+  @else if (users.length === 0) {
+    <p class="empty-message">No se encontraron usuarios registrados</p>
+  }
+
+  <!-- Users table -->
+  @if (users.length > 0) {
+    <!-- Error message after status update (table remains visible) -->
+    @if (errorMessage) {
+      <p role="alert" class="error-message">{{ errorMessage }}</p>
+    }
+
+    <div class="table-container">
+      <table aria-label="Lista de usuarios">
+        <thead>
+          <tr>
+            <th>Nombre completo</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Fecha de creación</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user.id) {
+            <tr>
+              <td>{{ user.fullName }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phone }}</td>
+              <td>{{ getRoleLabel(user.role) }}</td>
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="user.active ? 'status-active' : 'status-inactive'"
+                  [attr.aria-label]="user.active ? 'Estado: Activo' : 'Estado: Inactivo'"
+                >
+                  {{ user.active ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>{{ formatDate(user.createdAt) }}</td>
+              <td>
+                <button
+                  class="btn-toggle-status"
+                  [ngClass]="user.active ? 'btn-deactivate' : 'btn-activate'"
+                  [attr.aria-label]="(user.active ? 'Desactivar' : 'Activar') + ' usuario ' + user.fullName"
+                  (click)="onToggleStatus(user)"
+                >
+                  {{ user.active ? 'Desactivar' : 'Activar' }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Pagination Controls -->
+  @if (totalElements > pageSize) {
+    <nav aria-label="Paginación" class="pagination-controls">
+      <button
+        aria-label="Página anterior"
+        [disabled]="currentPage === 0"
+        (click)="onPrevPage()"
+      >
+        Anterior
+      </button>
+      <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+      <button
+        aria-label="Página siguiente"
+        [disabled]="currentPage === totalPages - 1"
+        (click)="onNextPage()"
+      >
+        Siguiente
+      </button>
+    </nav>
+  }
+</main>
+
+<!-- Confirmation Dialog -->
+<app-confirmation-dialog
+  [visible]="showDialog"
+  [title]="dialogTitle"
+  [message]="dialogMessage"
+  [isProcessing]="isProcessing"
+  (confirmed)="onConfirmToggle()"
+  (cancelled)="onCancelToggle()"
+></app-confirmation-dialog>

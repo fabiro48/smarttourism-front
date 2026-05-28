@@ -1,24 +1,28 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ExperiencesService } from '../services/experiences.service';
 import { ExperienceRequest, Difficulty } from '../models/experience.model';
+import { MapComponent } from '../../../shared/components/map/map.component';
 
 @Component({
   selector: 'app-experience-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MapComponent],
   templateUrl: './experience-form.component.html',
   styleUrl: './experience-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExperienceFormComponent implements OnInit {
+export class ExperienceFormComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private experiencesService = inject(ExperiencesService);
   private cdr = inject(ChangeDetectorRef);
+
+  private coordinateSubscriptions: Subscription[] = [];
 
   form!: FormGroup;
   mode: 'create' | 'edit' = 'create';
@@ -26,6 +30,9 @@ export class ExperienceFormComponent implements OnInit {
   isLoading = false;
   isSubmitting = false;
   errorMessage = '';
+
+  mapLatitude = 7.1254;
+  mapLongitude = -73.1198;
 
   get isEditMode(): boolean {
     return this.mode === 'edit';
@@ -63,8 +70,17 @@ export class ExperienceFormComponent implements OnInit {
     return this.form.get('images')!;
   }
 
+  get latitudeControl() {
+    return this.form.get('latitude')!;
+  }
+
+  get longitudeControl() {
+    return this.form.get('longitude')!;
+  }
+
   ngOnInit(): void {
     this.initForm();
+    this.subscribeToCoordinateChanges();
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -72,6 +88,20 @@ export class ExperienceFormComponent implements OnInit {
       this.experienceId = id;
       this.loadExperience(id);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.coordinateSubscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  onCoordinateSelected(event: { latitude: number; longitude: number }): void {
+    this.form.patchValue({
+      latitude: event.latitude,
+      longitude: event.longitude,
+    });
+    this.mapLatitude = event.latitude;
+    this.mapLongitude = event.longitude;
+    this.cdr.markForCheck();
   }
 
   onSubmit(): void {
@@ -122,7 +152,29 @@ export class ExperienceFormComponent implements OnInit {
       difficulty: ['', [Validators.required]],
       price: [null, [Validators.required, Validators.min(0)]],
       images: [''],
+      latitude: [7.1254, [Validators.required, Validators.min(-90), Validators.max(90)]],
+      longitude: [-73.1198, [Validators.required, Validators.min(-180), Validators.max(180)]],
     });
+  }
+
+  private subscribeToCoordinateChanges(): void {
+    const latSub = this.form.get('latitude')!.valueChanges.subscribe(value => {
+      const numValue = Number(value);
+      if (!isNaN(numValue) && numValue >= -90 && numValue <= 90) {
+        this.mapLatitude = numValue;
+        this.cdr.markForCheck();
+      }
+    });
+
+    const lngSub = this.form.get('longitude')!.valueChanges.subscribe(value => {
+      const numValue = Number(value);
+      if (!isNaN(numValue) && numValue >= -180 && numValue <= 180) {
+        this.mapLongitude = numValue;
+        this.cdr.markForCheck();
+      }
+    });
+
+    this.coordinateSubscriptions.push(latSub, lngSub);
   }
 
   private loadExperience(id: string): void {
@@ -139,7 +191,11 @@ export class ExperienceFormComponent implements OnInit {
           difficulty: experience.difficulty,
           price: experience.price,
           images: experience.images?.join(', ') ?? '',
+          latitude: experience.latitude,
+          longitude: experience.longitude,
         });
+        this.mapLatitude = experience.latitude;
+        this.mapLongitude = experience.longitude;
         this.isLoading = false;
         this.cdr.markForCheck();
       },
@@ -168,6 +224,8 @@ export class ExperienceFormComponent implements OnInit {
       difficulty: formValue.difficulty as Difficulty,
       price: formValue.price,
       images: imagesArray,
+      latitude: formValue.latitude,
+      longitude: formValue.longitude,
     };
   }
 }
