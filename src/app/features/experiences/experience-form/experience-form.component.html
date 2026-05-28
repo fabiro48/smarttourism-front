@@ -1,0 +1,124 @@
+<div class="st-card">
+  <h1>{{ isEditMode ? 'Editar experiencia' : 'Crear experiencia' }}</h1>
+
+  @if (isLoading) {
+    <div class="spinner" aria-label="Cargando datos de la experiencia">Cargando...</div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Título -->
+      <div class="form-field">
+        <label for="exp-title">Título</label>
+        <input id="exp-title" type="text" formControlName="title" maxlength="100" />
+        @if (title.invalid && title.touched) {
+          <span class="error-msg">
+            @if (title.errors?.['required']) {
+              El título es requerido
+            } @else if (title.errors?.['maxlength']) {
+              El título no puede exceder 100 caracteres
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Descripción -->
+      <div class="form-field">
+        <label for="exp-description">Descripción</label>
+        <textarea id="exp-description" formControlName="description" rows="4"></textarea>
+        @if (description.invalid && description.touched) {
+          <span class="error-msg">La descripción es requerida</span>
+        }
+      </div>
+
+      <!-- Categoría -->
+      <div class="form-field">
+        <label for="exp-category">Categoría</label>
+        <input id="exp-category" type="text" formControlName="category" />
+        @if (category.invalid && category.touched) {
+          <span class="error-msg">La categoría es requerida</span>
+        }
+      </div>
+
+      <!-- Ubicación -->
+      <div class="form-field">
+        <label for="exp-location">Ubicación</label>
+        <input id="exp-location" type="text" formControlName="location" />
+        @if (location.invalid && location.touched) {
+          <span class="error-msg">La ubicación es requerida</span>
+        }
+      </div>
+
+      <!-- Duración -->
+      <div class="form-field">
+        <label for="exp-duration">Duración (minutos)</label>
+        <input id="exp-duration" type="number" formControlName="duration" min="1" />
+        @if (duration.invalid && duration.touched) {
+          <span class="error-msg">
+            @if (duration.errors?.['required']) {
+              La duración es requerida
+            } @else if (duration.errors?.['min']) {
+              La duración debe ser al menos 1 minuto
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Dificultad -->
+      <div class="form-field">
+        <label for="exp-difficulty">Dificultad</label>
+        <select id="exp-difficulty" formControlName="difficulty">
+          <option value="" disabled>Selecciona una dificultad</option>
+          <option value="EASY">Fácil</option>
+          <option value="MODERATE">Moderada</option>
+          <option value="HARD">Difícil</option>
+          <option value="EXTREME">Extrema</option>
+        </select>
+        @if (difficulty.invalid && difficulty.touched) {
+          <span class="error-msg">La dificultad es requerida</span>
+        }
+      </div>
+
+      <!-- Precio -->
+      <div class="form-field">
+        <label for="exp-price">Precio (COP)</label>
+        <input id="exp-price" type="number" formControlName="price" min="0" />
+        @if (price.invalid && price.touched) {
+          <span class="error-msg">
+            @if (price.errors?.['required']) {
+              El precio es requerido
+            } @else if (price.errors?.['min']) {
+              El precio no puede ser negativo
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Imágenes -->
+      <div class="form-field">
+        <label for="exp-images">Imágenes (URLs separadas por coma)</label>
+        <input id="exp-images" type="text" formControlName="images" placeholder="https://ejemplo.com/img1.jpg, https://ejemplo.com/img2.jpg" />
+      </div>
+
+      <!-- Error del backend -->
+      @if (errorMessage) {
+        <p class="error-msg" role="alert">{{ errorMessage }}</p>
+      }
+
+      <!-- Botón de envío -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="form.invalid || isSubmitting"
+        [attr.aria-disabled]="isSubmitting"
+      >
+        @if (isSubmitting) {
+          <span class="spinner-inline" aria-hidden="true"></span>
+          Guardando...
+        } @else {
+          {{ isEditMode ? 'Guardar cambios' : 'Crear' }}
+        }
+      </button>
+
+    </form>
+  }
+</div>

@@ -1,1 +1,127 @@
-<h1>Experiencias</h1>
+<main>
+  <h1>Experiencias</h1>
+
+  <!-- Botón Nueva experiencia (solo ADMIN) -->
+  @if (isAdmin) {
+    <a class="btn-primary" routerLink="new">Crear experiencia</a>
+  }
+
+  <!-- Filter Panel -->
+  <section aria-label="Filtros" class="filter-panel">
+    <label for="filter-location">Ubicación</label>
+    <input
+      id="filter-location"
+      type="text"
+      [(ngModel)]="filters.location"
+      (ngModelChange)="onFilterChange()"
+      placeholder="Buscar por nombre o ubicación"
+    />
+
+    <label for="filter-difficulty">Dificultad</label>
+    <select
+      id="filter-difficulty"
+      [(ngModel)]="filters.difficulty"
+      (ngModelChange)="onFilterChange()"
+    >
+      <option value="">Cualquier dificultad</option>
+      <option value="EASY">Fácil</option>
+      <option value="MODERATE">Moderada</option>
+      <option value="HARD">Difícil</option>
+      <option value="EXTREME">Extrema</option>
+    </select>
+
+    <label for="filter-category">Categoría</label>
+    <input
+      id="filter-category"
+      type="text"
+      [(ngModel)]="filters.category"
+      (ngModelChange)="onFilterChange()"
+      placeholder="Buscar por categoría"
+    />
+
+    <label for="filter-min-price">Precio mínimo</label>
+    <input
+      id="filter-min-price"
+      type="number"
+      [(ngModel)]="filters.minPrice"
+      (ngModelChange)="onFilterChange()"
+      placeholder="0"
+    />
+
+    <label for="filter-max-price">Precio máximo</label>
+    <input
+      id="filter-max-price"
+      type="number"
+      [(ngModel)]="filters.maxPrice"
+      (ngModelChange)="onFilterChange()"
+      placeholder="Sin límite"
+    />
+
+    <button (click)="onClearFilters()" class="btn-clear">Limpiar filtros</button>
+  </section>
+
+  <!-- Loading state -->
+  @if (isLoading) {
+    <div class="spinner">Cargando...</div>
+  }
+
+  <!-- Error state -->
+  @else if (errorMessage) {
+    <p role="alert" class="error-message">{{ errorMessage }}</p>
+  }
+
+  <!-- Empty state -->
+  @else if (experiences.length === 0) {
+    <p class="empty-message">No se encontraron experiencias con los filtros seleccionados</p>
+  }
+
+  <!-- Experiences grid -->
+  @else {
+    <div class="experiences-grid">
+      @for (exp of experiences; track exp.id) {
+        <app-experience-card
+          [experience]="exp"
+          [isAdmin]="isAdmin"
+          (deactivate)="onDeactivate($event)"
+        />
+      }
+    </div>
+  }
+
+  <!-- Pagination Controls -->
+  @if (totalPages > 1) {
+    <p class="pagination-info">
+      Mostrando {{ rangeStart }}–{{ rangeEnd }} de {{ totalElements }} experiencias
+    </p>
+    <nav aria-label="Paginación" class="pagination-controls">
+      <button
+        aria-label="Página anterior"
+        [disabled]="currentPage === 0"
+        (click)="onPrevPage()"
+      >
+        Anterior
+      </button>
+      <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+      <button
+        aria-label="Página siguiente"
+        [disabled]="currentPage === totalPages - 1"
+        (click)="onNextPage()"
+      >
+        Siguiente
+      </button>
+    </nav>
+  }
+
+  <!-- Deactivation confirmation dialog -->
+  @if (confirmDeleteId) {
+    <div role="dialog" aria-modal="true" class="confirm-dialog-overlay">
+      <div class="confirm-dialog">
+        <p>¿Desactivar esta experiencia? Esta acción no se puede deshacer fácilmente.</p>
+        <div class="confirm-dialog-actions">
+          <button (click)="onConfirmDelete()" class="btn-danger">Confirmar</button>
+          <button (click)="onCancelDelete()" class="btn-secondary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
+</main>

@@ -1,0 +1,71 @@
+<div [attr.aria-busy]="isLoading">
+
+  @if (isLoading) {
+    <div class="spinner">Cargando...</div>
+  }
+
+  @else if (notFound) {
+    <p>Experiencia no encontrada</p>
+    <a routerLink="/experiences">Volver al listado</a>
+  }
+
+  @else if (errorMessage) {
+    <p role="alert">{{ errorMessage }}</p>
+    <a routerLink="/experiences">Volver al listado</a>
+  }
+
+  @else if (experience) {
+    <article class="st-card">
+      <h1>{{ experience.title }}</h1>
+
+      <!-- Galería de imágenes -->
+      @if (experience.images.length > 0) {
+        <div class="gallery">
+          @for (img of experience.images; track img) {
+            <img [src]="img" [alt]="experience.title" />
+          }
+        </div>
+      } @else {
+        <div class="img-placeholder" aria-hidden="true"></div>
+      }
+
+      <!-- Descripción -->
+      <p class="description">{{ experience.description }}</p>
+
+      <!-- Campos del detalle -->
+      <p class="category">Categoría: {{ experience.category }}</p>
+      <p class="location">Ubicación: {{ experience.location }}</p>
+      <p class="duration">Duración: {{ experience.duration }} minutos</p>
+      <p class="difficulty">
+        Dificultad: <span class="difficulty-badge">{{ experience.difficulty }}</span>
+      </p>
+      <p class="price">Precio: {{ experience.price | currency:'COP':'symbol':'1.0-0' }}</p>
+
+      <!-- Calificación y reseñas -->
+      <p class="rating">
+        @if (experience.averageRating !== null) {
+          {{ experience.averageRating | number:'1.1-1' }} ({{ experience.reviewCount }} reseñas)
+        } @else {
+          Sin reseñas aún
+        }
+      </p>
+
+      <!-- Horarios -->
+      <section class="schedules">
+        <h2>Horarios</h2>
+        @if (experience.schedules.length === 0) {
+          <p>No hay horarios disponibles actualmente</p>
+        } @else {
+          <ul>
+            @for (s of experience.schedules; track s.id) {
+              <li>{{ s.dayOfWeek }} — {{ s.startTime }} a {{ s.endTime }}</li>
+            }
+          </ul>
+        }
+      </section>
+
+      <a routerLink="/experiences" class="btn-outline">Volver al listado</a>
+    </article>
+  }
+
+</div>

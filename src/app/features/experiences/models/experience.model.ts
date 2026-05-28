@@ -34,6 +34,7 @@ export interface ExperienceRequest {
   duration: number;
   difficulty: Difficulty;
   price: number;
+  images?: string[];
 }
 
 export interface ExperienceFilters {

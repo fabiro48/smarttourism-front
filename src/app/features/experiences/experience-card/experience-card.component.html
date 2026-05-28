@@ -1,0 +1,35 @@
+<article
+  class="st-card experience-card"
+  role="article"
+  [attr.aria-label]="'Ver detalle de ' + experience.title"
+  (click)="navigateToDetail()"
+  (keydown.enter)="navigateToDetail()"
+  tabindex="0"
+>
+  @if (experience.images.length > 0) {
+    <img [src]="experience.images[0]" [alt]="experience.title" class="experience-img" />
+  } @else {
+    <div class="img-placeholder" aria-hidden="true"></div>
+  }
+
+  <span class="difficulty-badge" [ngClass]="difficultyClass">{{ difficultyLabel }}</span>
+
+  <h2 class="experience-title">{{ experience.title }}</h2>
+  <p class="category">{{ experience.category }}</p>
+  <p class="location">📍 {{ experience.location }}</p>
+  <p class="price">{{ experience.price | currency:'COP':'symbol':'1.0-0' }}</p>
+  <p class="rating">
+    @if (experience.averageRating !== null) {
+      ⭐ {{ experience.averageRating | number:'1.1-1' }}
+    } @else {
+      Sin reseñas
+    }
+  </p>
+
+  @if (isAdmin) {
+    <div class="admin-actions">
+      <button class="btn-outline" (click)="onEdit($event)">Editar</button>
+      <button class="btn-outline" (click)="onDeactivate($event)">Desactivar</button>
+    </div>
+  }
+</article>

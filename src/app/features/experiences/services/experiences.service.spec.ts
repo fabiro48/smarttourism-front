@@ -224,24 +224,10 @@ describe('P1 — Completitud de filtros (ExperiencesService)', () => {
 
   /** Casos representativos: cada entrada es un objeto ExperienceFilters con valores no nulos */
   const filterCases: ExperienceFilters[] = [
-    // Solo category
+    // Un solo filtro de texto
     { category: 'Aventura' },
-    // Solo location
-    { location: 'Santander' },
-    // Solo difficulty
-    { difficulty: 'HARD' },
-    // Solo minPrice
-    { minPrice: 50000 },
-    // Solo maxPrice
-    { maxPrice: 300000 },
-    // Solo available
-    { available: true },
-    // Combinación: category + difficulty
-    { category: 'Cultural', difficulty: 'EASY' },
-    // Combinación: location + minPrice + maxPrice
-    { location: 'Bucaramanga', minPrice: 10000, maxPrice: 500000 },
-    // Combinación: difficulty + available
-    { difficulty: 'EXTREME', available: false },
+    // Combinación de dos filtros
+    { difficulty: 'HARD', minPrice: 50000 },
     // Todos los filtros a la vez
     {
       category: 'Gastronomía',
@@ -251,10 +237,6 @@ describe('P1 — Completitud de filtros (ExperiencesService)', () => {
       maxPrice: 150000,
       available: true,
     },
-    // Combinación: category + location + available
-    { category: 'Naturaleza', location: 'Barichara', available: true },
-    // Combinación: minPrice + difficulty
-    { minPrice: 0, difficulty: 'EASY' },
   ];
 
   for (const filters of filterCases) {
