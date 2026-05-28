@@ -1,4 +1,99 @@
-<div class="register-container">
-  <h1>Registrarse</h1>
-  <p>¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a></p>
+<!-- src/app/features/auth/register/register.component.html -->
+<div class="auth-page">
+  <div class="auth-card card">
+    <h1 class="auth-title">Crear cuenta</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" role="form" novalidate>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label for="register-name">Nombre</label>
+        <input
+          id="register-name"
+          type="text"
+          formControlName="name"
+          class="form-control"
+          [class.is-invalid]="name.invalid && (name.touched || name.dirty)"
+          autocomplete="name"
+          aria-describedby="register-name-error"
+        />
+        <div
+          id="register-name-error"
+          class="field-error"
+          *ngIf="name.invalid && (name.touched || name.dirty)"
+          role="alert"
+        >
+          <span *ngIf="name.errors?.['required']">El nombre es requerido</span>
+          <span *ngIf="name.errors?.['minlength']">Mínimo 2 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="register-email">Email</label>
+        <input
+          id="register-email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="email.invalid && (email.touched || email.dirty)"
+          autocomplete="email"
+          aria-describedby="register-email-error"
+        />
+        <div
+          id="register-email-error"
+          class="field-error"
+          *ngIf="email.invalid && (email.touched || email.dirty)"
+          role="alert"
+        >
+          <span *ngIf="email.errors?.['required']">El email es requerido</span>
+          <span *ngIf="email.errors?.['email']">Ingresa un email válido</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="register-password">Contraseña</label>
+        <input
+          id="register-password"
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [class.is-invalid]="password.invalid && (password.touched || password.dirty)"
+          autocomplete="new-password"
+          aria-describedby="register-password-error"
+        />
+        <div
+          id="register-password-error"
+          class="field-error"
+          *ngIf="password.invalid && (password.touched || password.dirty)"
+          role="alert"
+        >
+          <span *ngIf="password.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password.errors?.['minlength']">Mínimo 6 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Error de backend -->
+      <div class="backend-error" *ngIf="errorMessage" role="alert">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="isLoading"
+        [attr.aria-disabled]="isLoading"
+      >
+        {{ isLoading ? 'Registrando...' : 'Registrarse' }}
+      </button>
+
+    </form>
+
+    <p class="auth-link">
+      ¿Ya tienes cuenta?
+      <a routerLink="/auth/login">Inicia sesión</a>
+    </p>
+  </div>
 </div>

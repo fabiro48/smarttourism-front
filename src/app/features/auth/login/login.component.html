@@ -1,4 +1,76 @@
-<div class="login-container">
-  <h1>Iniciar Sesión</h1>
-  <p>¿No tienes cuenta? <a routerLink="/auth/register">Regístrate</a></p>
+<!-- src/app/features/auth/login/login.component.html -->
+<div class="auth-page">
+  <div class="auth-card card">
+    <h1 class="auth-title">Iniciar sesión</h1>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" role="form" novalidate>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input
+          id="login-email"
+          type="email"
+          formControlName="email"
+          class="form-control"
+          [class.is-invalid]="email.invalid && (email.touched || email.dirty)"
+          autocomplete="email"
+          aria-describedby="login-email-error"
+        />
+        <div
+          id="login-email-error"
+          class="field-error"
+          *ngIf="email.invalid && (email.touched || email.dirty)"
+          role="alert"
+        >
+          <span *ngIf="email.errors?.['required']">El email es requerido</span>
+          <span *ngIf="email.errors?.['email']">Ingresa un email válido</span>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="login-password">Contraseña</label>
+        <input
+          id="login-password"
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [class.is-invalid]="password.invalid && (password.touched || password.dirty)"
+          autocomplete="current-password"
+          aria-describedby="login-password-error"
+        />
+        <div
+          id="login-password-error"
+          class="field-error"
+          *ngIf="password.invalid && (password.touched || password.dirty)"
+          role="alert"
+        >
+          <span *ngIf="password.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password.errors?.['minlength']">Mínimo 6 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Error de backend -->
+      <div class="backend-error" *ngIf="errorMessage" role="alert">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="isLoading"
+        [attr.aria-disabled]="isLoading"
+      >
+        {{ isLoading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+      </button>
+
+    </form>
+
+    <p class="auth-link">
+      ¿No tienes cuenta?
+      <a routerLink="/auth/register">Regístrate</a>
+    </p>
+  </div>
 </div>
