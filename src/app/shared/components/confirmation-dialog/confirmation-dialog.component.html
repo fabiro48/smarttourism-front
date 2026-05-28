@@ -1,0 +1,31 @@
+@if (visible) {
+  <div class="dialog-overlay" (click)="onCancel()">
+    <div class="dialog-container" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" [attr.aria-labelledby]="'dialog-title'">
+      <div class="dialog-header">
+        <h5 id="dialog-title" class="dialog-title">{{ title }}</h5>
+      </div>
+      <div class="dialog-body">
+        <p class="dialog-message">{{ message }}</p>
+      </div>
+      <div class="dialog-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="isProcessing"
+          (click)="onCancel()">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          [disabled]="isProcessing"
+          (click)="onConfirm()">
+          @if (isProcessing) {
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          }
+          {{ confirmLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

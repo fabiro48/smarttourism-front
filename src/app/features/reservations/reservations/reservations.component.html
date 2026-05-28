@@ -1,1 +1,77 @@
-<h1>Reservas</h1>
+<main [attr.aria-busy]="isLoading ? 'true' : null">
+  <h1>Mis Reservas</h1>
+
+  <!-- Payment feedback message -->
+  @if (paymentMessage) {
+    <div
+      class="payment-message"
+      [class.success]="paymentMessageType === 'success'"
+      [class.warning]="paymentMessageType === 'warning'"
+      [class.error]="paymentMessageType === 'error'"
+      role="alert"
+    >
+      {{ paymentMessage }}
+    </div>
+  }
+
+  <!-- Loading state -->
+  @if (isLoading) {
+    <div class="spinner" aria-busy="true">Cargando...</div>
+  }
+
+  <!-- Error state -->
+  @else if (errorMessage) {
+    <p role="alert" class="error-message">{{ errorMessage }}</p>
+  }
+
+  <!-- Empty state -->
+  @else if (reservations.length === 0) {
+    <div class="empty-message">
+      <p>No tienes reservas aún. ¡Explora las experiencias disponibles!</p>
+      <a class="btn-primary" routerLink="/experiences">Ver experiencias</a>
+    </div>
+  }
+
+  <!-- Reservations list -->
+  @else {
+    <div class="reservations-list">
+      @for (reservation of reservations; track reservation.id) {
+        <app-reservation-card
+          [reservation]="reservation"
+          [paymentLoading]="paymentLoading === reservation.id"
+          [cancelLoading]="cancelLoading === reservation.id"
+          (pay)="onPay($event)"
+          (cancel)="onCancel($event)"
+        />
+      }
+    </div>
+  }
+
+  <!-- Payment confirmation dialog -->
+  @if (confirmPayId) {
+    <div role="dialog" aria-modal="true" class="confirm-dialog-overlay">
+      <div class="confirm-dialog">
+        @if (getReservationForPay(); as reservation) {
+          <p>¿Confirmar pago de {{ reservation.totalAmount }} COP para {{ reservation.experienceTitle }}?</p>
+        }
+        <div class="confirm-dialog-actions">
+          <button (click)="onConfirmPay()" class="btn-primary">Confirmar</button>
+          <button (click)="onDismissPayDialog()" class="btn-secondary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Cancel confirmation dialog -->
+  @if (confirmCancelId) {
+    <div role="dialog" aria-modal="true" class="confirm-dialog-overlay">
+      <div class="confirm-dialog">
+        <p>¿Cancelar esta reserva? Esta acción no se puede deshacer.</p>
+        <div class="confirm-dialog-actions">
+          <button (click)="onConfirmCancel()" class="btn-primary btn-danger">Confirmar</button>
+          <button (click)="onDismissCancelDialog()" class="btn-secondary">Volver</button>
+        </div>
+      </div>
+    </div>
+  }
+</main>

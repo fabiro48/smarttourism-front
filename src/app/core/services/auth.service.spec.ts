@@ -660,7 +660,7 @@ describe('P6 — Invariante de mensaje de error', () => {
 
     it('error 409: errorMessage no vacío e isLoading false', () => {
       // Validates: Requirement 2.10
-      component.form.setValue({ name: 'Jane', email: 'existing@test.com', password: 'password123' });
+      component.form.setValue({ fullName: 'Jane Doe', email: 'existing@test.com', password: 'password123', phone: '1234567', documentNumber: '12345' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);
@@ -673,7 +673,7 @@ describe('P6 — Invariante de mensaje de error', () => {
 
     it('error 400: errorMessage no vacío e isLoading false', () => {
       // Validates: Requirement 2.11
-      component.form.setValue({ name: 'Jane', email: 'jane@test.com', password: 'password123' });
+      component.form.setValue({ fullName: 'Jane Doe', email: 'jane@test.com', password: 'password123', phone: '1234567', documentNumber: '12345' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);
@@ -686,7 +686,7 @@ describe('P6 — Invariante de mensaje de error', () => {
 
     it('error 500: errorMessage no vacío e isLoading false', () => {
       // Validates: Requirement 2.12
-      component.form.setValue({ name: 'Jane', email: 'jane@test.com', password: 'password123' });
+      component.form.setValue({ fullName: 'Jane Doe', email: 'jane@test.com', password: 'password123', phone: '1234567', documentNumber: '12345' });
       component.onSubmit();
 
       const req = httpTesting.expectOne(`${env.apiUrl}/auth/register`);

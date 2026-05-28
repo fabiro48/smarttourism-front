@@ -1,0 +1,62 @@
+<main>
+  <h1>Horarios</h1>
+
+  <a class="btn-primary" [routerLink]="['new']">Nuevo horario</a>
+
+  <!-- Loading state -->
+  @if (isLoading) {
+    <div class="spinner" role="status" aria-label="Cargando horarios">Cargando...</div>
+  }
+
+  <!-- Error state -->
+  @else if (errorMessage) {
+    <p role="alert" class="error-message">{{ errorMessage }}</p>
+  }
+
+  <!-- Empty state -->
+  @else if (schedules.length === 0) {
+    <p class="empty-message">No hay horarios configurados para esta experiencia.</p>
+  }
+
+  <!-- Schedule data table -->
+  @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Día</th>
+            <th>Hora inicio</th>
+            <th>Hora fin</th>
+            <th>Cupos disponibles</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (schedule of schedules; track schedule.id) {
+            <tr>
+              <td>{{ schedule.dayOfWeek }}</td>
+              <td>{{ schedule.startTime }}</td>
+              <td>{{ schedule.endTime }}</td>
+              <td>{{ schedule.availableSlots }}</td>
+              <td class="actions">
+                <a class="btn-edit" [routerLink]="[schedule.id, 'edit']">Editar</a>
+                <button class="btn-danger" (click)="onDelete(schedule)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Confirmation dialog for delete -->
+  <app-confirmation-dialog
+    [visible]="deleteScheduleId !== null"
+    title="Confirmar desactivación"
+    [message]="'¿Desea desactivar el horario ' + deleteScheduleInfo + '? Esta acción no se puede deshacer fácilmente.'"
+    confirmLabel="Desactivar"
+    [isProcessing]="isDeleting"
+    (confirmed)="onConfirmDelete()"
+    (cancelled)="onCancelDelete()"
+  />
+</main>

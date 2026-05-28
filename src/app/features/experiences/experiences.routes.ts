@@ -22,5 +22,9 @@ export const experiencesRoutes: Routes = [
     path: ':id/edit',
     component: ExperienceFormComponent,
     canActivate: [adminGuard]
+  },
+  {
+    path: ':id/schedules',
+    loadChildren: () => import('./schedules/schedules.routes').then(m => m.schedulesRoutes)
   }
 ];

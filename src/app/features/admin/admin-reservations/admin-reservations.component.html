@@ -1,0 +1,114 @@
+<main>
+  <h1>Gestión de Reservas</h1>
+
+  <!-- Filter Panel -->
+  <section aria-label="Filtros" class="filter-panel">
+    <div class="filter-group">
+      <label for="filter-status">Estado</label>
+      <select
+        id="filter-status"
+        [(ngModel)]="selectedStatus"
+        (ngModelChange)="onFilterChange()"
+      >
+        <option value="">Todos los estados</option>
+        <option value="PENDING_PAYMENT">Pendiente de pago</option>
+        <option value="CONFIRMED">Confirmada</option>
+        <option value="CANCELLED">Cancelada</option>
+        <option value="EXPIRED">Expirada</option>
+        <option value="NO_SHOW">No asistió</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="filter-start-date">Fecha inicio</label>
+      <input
+        id="filter-start-date"
+        type="date"
+        [(ngModel)]="startDate"
+        (ngModelChange)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="filter-end-date">Fecha fin</label>
+      <input
+        id="filter-end-date"
+        type="date"
+        [(ngModel)]="endDate"
+        (ngModelChange)="onFilterChange()"
+      />
+    </div>
+  </section>
+
+  <!-- Loading state -->
+  @if (isLoading) {
+    <div class="spinner">Cargando...</div>
+  }
+
+  <!-- Error state -->
+  @else if (errorMessage) {
+    <p role="alert" class="error-message">{{ errorMessage }}</p>
+  }
+
+  <!-- Empty state -->
+  @else if (reservations.length === 0) {
+    <p class="empty-message">No se encontraron reservas con los filtros seleccionados</p>
+  }
+
+  <!-- Reservations table -->
+  @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Turista</th>
+            <th>Email</th>
+            <th>Experiencia</th>
+            <th>Fecha reserva</th>
+            <th>Cantidad</th>
+            <th>Monto total</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (reservation of reservations; track reservation.id) {
+            <tr>
+              <td>{{ reservation.touristName }}</td>
+              <td>{{ reservation.touristEmail }}</td>
+              <td>{{ reservation.experienceTitle }}</td>
+              <td>{{ reservation.reservationDate }}</td>
+              <td>{{ reservation.quantity }}</td>
+              <td>{{ reservation.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="'status-' + reservation.status.toLowerCase()">
+                  {{ getStatusLabel(reservation.status) }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Pagination Controls -->
+  @if (totalElements > 20) {
+    <nav aria-label="Paginación" class="pagination-controls">
+      <button
+        aria-label="Página anterior"
+        [disabled]="currentPage === 0"
+        (click)="onPrevPage()"
+      >
+        Anterior
+      </button>
+      <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+      <button
+        aria-label="Página siguiente"
+        [disabled]="currentPage === totalPages - 1"
+        (click)="onNextPage()"
+      >
+        Siguiente
+      </button>
+    </nav>
+  }
+</main>

@@ -1,0 +1,81 @@
+<div class="st-card">
+  <h1>{{ isEditMode ? 'Editar horario' : 'Crear horario' }}</h1>
+
+  @if (isLoading) {
+    <div class="spinner" aria-label="Cargando datos del horario">Cargando...</div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Día de la semana -->
+      <div class="form-field">
+        <label for="schedule-day">Día de la semana</label>
+        <select id="schedule-day" formControlName="dayOfWeek">
+          <option value="" disabled>Selecciona un día</option>
+          @for (day of daysOfWeek; track day) {
+            <option [value]="day">{{ day }}</option>
+          }
+        </select>
+        @if (dayOfWeek.invalid && dayOfWeek.touched) {
+          <span class="error-msg">El día de la semana es requerido</span>
+        }
+      </div>
+
+      <!-- Hora de inicio -->
+      <div class="form-field">
+        <label for="schedule-start">Hora de inicio</label>
+        <input id="schedule-start" type="time" formControlName="startTime" />
+        @if (startTime.invalid && startTime.touched) {
+          <span class="error-msg">La hora de inicio es requerida</span>
+        }
+      </div>
+
+      <!-- Hora de fin -->
+      <div class="form-field">
+        <label for="schedule-end">Hora de fin</label>
+        <input id="schedule-end" type="time" formControlName="endTime" />
+        @if (endTime.invalid && endTime.touched) {
+          <span class="error-msg">La hora de fin es requerida</span>
+        }
+        @if (form.hasError('timeRange') && endTime.touched && startTime.touched) {
+          <span class="error-msg">La hora de fin debe ser posterior a la hora de inicio</span>
+        }
+      </div>
+
+      <!-- Cupos disponibles -->
+      <div class="form-field">
+        <label for="schedule-slots">Cupos disponibles</label>
+        <input id="schedule-slots" type="number" formControlName="availableSlots" min="1" max="1000" />
+        @if (availableSlots.invalid && availableSlots.touched) {
+          <span class="error-msg">
+            @if (availableSlots.errors?.['required']) {
+              Los cupos disponibles son requeridos
+            } @else if (availableSlots.errors?.['availableSlots']) {
+              Los cupos deben ser un número entero entre 1 y 1000
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Error del backend -->
+      @if (errorMessage) {
+        <p class="error-msg" role="alert">{{ errorMessage }}</p>
+      }
+
+      <!-- Botón de envío -->
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="form.invalid || isSubmitting"
+        [attr.aria-disabled]="form.invalid || isSubmitting"
+      >
+        @if (isSubmitting) {
+          <span class="spinner-inline" aria-hidden="true"></span>
+          Guardando...
+        } @else {
+          {{ isEditMode ? 'Guardar cambios' : 'Crear horario' }}
+        }
+      </button>
+
+    </form>
+  }
+</div>

@@ -1,0 +1,55 @@
+<div
+  class="reservation-card"
+  role="article"
+  [attr.aria-label]="'Reserva de ' + reservation.experienceTitle + ' - ' + statusLabel"
+>
+  <div class="card-header">
+    <h3 class="experience-title">{{ reservation.experienceTitle }}</h3>
+    <span class="status-badge" [ngClass]="statusClass">{{ statusLabel }}</span>
+  </div>
+
+  <div class="card-body">
+    <p class="location">📍 {{ reservation.experienceLocation }}</p>
+    <p class="date">📅 {{ reservation.reservationDate | date:'dd/MM/yyyy' }}</p>
+    <p class="quantity">👥 {{ reservation.quantity }} {{ reservation.quantity === 1 ? 'cupo' : 'cupos' }}</p>
+    <p class="amount">💰 {{ reservation.totalAmount | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+
+    @if (showExpiration) {
+      <p class="expiration">⏳ Expira: {{ reservation.expirationDate | date:'dd/MM/yyyy HH:mm' }}</p>
+    }
+  </div>
+
+  @if (showPayButton || showCancelButton) {
+    <div class="card-actions">
+      @if (showPayButton) {
+        <button
+          class="btn-pay"
+          (click)="onPay()"
+          [disabled]="paymentLoading"
+        >
+          @if (paymentLoading) {
+            <span class="spinner" aria-hidden="true"></span>
+            Procesando...
+          } @else {
+            Pagar
+          }
+        </button>
+      }
+
+      @if (showCancelButton) {
+        <button
+          class="btn-cancel"
+          (click)="onCancel()"
+          [disabled]="cancelLoading"
+        >
+          @if (cancelLoading) {
+            <span class="spinner" aria-hidden="true"></span>
+            Cancelando...
+          } @else {
+            Cancelar
+          }
+        </button>
+      }
+    </div>
+  }
+</div>

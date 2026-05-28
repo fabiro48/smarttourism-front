@@ -1,27 +1,58 @@
 import { Component, OnInit, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ExperiencesService } from '../services/experiences.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { ExperienceResponse } from '../models/experience.model';
 
 @Component({
   selector: 'app-experience-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './experience-detail.component.html',
   styleUrl: './experience-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExperienceDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private experiencesService = inject(ExperiencesService);
+  private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
 
   experience: ExperienceResponse | null = null;
   isLoading = false;
   errorMessage = '';
   notFound = false;
+  selectedScheduleId = '';
+
+  get isAdmin(): boolean {
+    return this.authService.getUserRole() === 'ADMIN';
+  }
+
+  get isTourist(): boolean {
+    return this.authService.getUserRole() === 'TOURIST';
+  }
+
+  get canReserve(): boolean {
+    return this.isTourist && !!this.experience && this.experience.schedules.length > 0 && !!this.selectedScheduleId;
+  }
+
+  onReserve(): void {
+    if (!this.experience || !this.selectedScheduleId) return;
+    const schedule = this.experience.schedules.find(s => s.id === this.selectedScheduleId);
+    this.router.navigate(['/reservations/new'], {
+      queryParams: {
+        experienceId: this.experience.id,
+        scheduleId: this.selectedScheduleId,
+        experienceTitle: this.experience.title,
+        pricePerPerson: this.experience.price,
+        scheduleInfo: schedule ? `${schedule.dayOfWeek} ${schedule.startTime} - ${schedule.endTime}` : '',
+      },
+    });
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

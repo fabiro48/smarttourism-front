@@ -1,0 +1,87 @@
+<div class="st-card">
+  <h1>Nueva Reserva</h1>
+
+  <!-- Resumen de experiencia -->
+  @if (experienceTitle) {
+    <div class="reservation-summary">
+      <h2>Resumen</h2>
+      <p><strong>Experiencia:</strong> {{ experienceTitle }}</p>
+      @if (scheduleInfo) {
+        <p><strong>Horario:</strong> {{ scheduleInfo }}</p>
+      }
+      @if (unitPrice > 0) {
+        <p><strong>Precio por persona:</strong> {{ unitPrice | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+      }
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- Fecha de reserva -->
+    <div class="form-field">
+      <label for="res-date">Fecha de reserva</label>
+      <input
+        id="res-date"
+        type="date"
+        formControlName="reservationDate"
+      />
+      @if (reservationDate.invalid && reservationDate.touched) {
+        <span class="error-msg">
+          @if (reservationDate.errors?.['required']) {
+            La fecha es requerida
+          } @else if (reservationDate.errors?.['futureDate']) {
+            La fecha debe ser posterior a hoy
+          }
+        </span>
+      }
+    </div>
+
+    <!-- Cantidad -->
+    <div class="form-field">
+      <label for="res-quantity">Cantidad de personas</label>
+      <input
+        id="res-quantity"
+        type="number"
+        formControlName="quantity"
+        min="1"
+      />
+      @if (quantity.invalid && quantity.touched) {
+        <span class="error-msg">
+          @if (quantity.errors?.['required']) {
+            La cantidad es requerida
+          } @else if (quantity.errors?.['min']) {
+            La cantidad mínima es 1
+          }
+        </span>
+      }
+    </div>
+
+    <!-- Total calculado -->
+    @if (unitPrice > 0 && totalPrice > 0) {
+      <div class="total-section">
+        <p><strong>Total:</strong> {{ totalPrice | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
+      </div>
+    }
+
+    <!-- Error del backend -->
+    @if (errorMessage) {
+      <p class="error-msg" role="alert">{{ errorMessage }}</p>
+    }
+
+    <!-- Botón de envío -->
+    <button
+      type="submit"
+      class="btn-primary"
+      [disabled]="form.invalid || isSubmitting"
+      [attr.aria-disabled]="isSubmitting ? 'true' : null"
+    >
+      @if (isSubmitting) {
+        <span class="spinner-inline" aria-hidden="true"></span>
+        Reservando...
+      } @else {
+        Confirmar Reserva
+      }
+    </button>
+
+  </form>
+</div>

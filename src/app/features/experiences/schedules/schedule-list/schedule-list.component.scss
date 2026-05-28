@@ -1,0 +1,135 @@
+:host {
+  display: block;
+  background: var(--color-bg);
+  min-height: 100vh;
+}
+
+main {
+  background: var(--color-bg);
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
+
+// Button styles
+.btn-primary {
+  background: var(--color-primary);
+  border-radius: var(--radius-control);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-block;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.btn-edit {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  color: var(--color-text);
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--color-bg);
+  }
+}
+
+.btn-danger {
+  background: var(--color-error);
+  border-radius: var(--radius-control);
+  color: #fff;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+// Loading state
+.spinner {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-muted);
+  font-size: 1.1rem;
+}
+
+// Error state
+.error-message {
+  color: var(--color-error);
+  padding: 1rem;
+  text-align: center;
+}
+
+// Empty state
+.empty-message {
+  color: var(--color-muted);
+  padding: 3rem;
+  text-align: center;
+  font-size: 1rem;
+}
+
+// Table styles
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+
+  th,
+  td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  th {
+    background: var(--color-bg);
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  td {
+    color: var(--color-text);
+    font-size: 0.95rem;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: var(--color-bg);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}

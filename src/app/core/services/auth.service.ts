@@ -28,11 +28,18 @@ export class AuthService {
   readonly logout$ = new Subject<void>();
 
   /**
-   * Almacena el token JWT en localStorage.
+   * Subject que emite cuando el usuario inicia sesión.
+   * Los componentes (e.g. Navbar) se suscriben para actualizar su estado.
+   */
+  readonly login$ = new Subject<void>();
+
+  /**
+   * Almacena el token JWT en localStorage y emite el evento login$.
    * @param token - JWT recibido del backend tras login exitoso.
    */
   login(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
+    this.login$.next();
   }
 
   /**

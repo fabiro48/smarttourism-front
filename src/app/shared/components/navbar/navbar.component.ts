@@ -17,15 +17,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isAdmin = false;
 
+  private loginSub?: Subscription;
+
   ngOnInit(): void {
     this.updateAuthState();
     this.logoutSub = this.authService.logout$.subscribe(() => {
+      this.updateAuthState();
+    });
+    this.loginSub = this.authService.login$.subscribe(() => {
       this.updateAuthState();
     });
   }
 
   ngOnDestroy(): void {
     this.logoutSub?.unsubscribe();
+    this.loginSub?.unsubscribe();
   }
 
   private updateAuthState(): void {

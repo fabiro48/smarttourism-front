@@ -53,6 +53,11 @@
       <!-- Horarios -->
       <section class="schedules">
         <h2>Horarios</h2>
+        @if (isAdmin) {
+          <a [routerLink]="['/experiences', experience.id, 'schedules']" class="btn-primary manage-schedules-btn">
+            Gestionar Horarios
+          </a>
+        }
         @if (experience.schedules.length === 0) {
           <p>No hay horarios disponibles actualmente</p>
         } @else {
@@ -61,6 +66,22 @@
               <li>{{ s.dayOfWeek }} — {{ s.startTime }} a {{ s.endTime }}</li>
             }
           </ul>
+
+          <!-- Selector de horario y botón Reservar (solo turistas) -->
+          @if (isTourist) {
+            <div class="reserve-section">
+              <label for="schedule-select">Selecciona un horario:</label>
+              <select id="schedule-select" [(ngModel)]="selectedScheduleId">
+                <option value="">-- Elige un horario --</option>
+                @for (s of experience.schedules; track s.id) {
+                  <option [value]="s.id">{{ s.dayOfWeek }} — {{ s.startTime }} a {{ s.endTime }}</option>
+                }
+              </select>
+              <button class="btn-primary" [disabled]="!canReserve" (click)="onReserve()">
+                Reservar
+              </button>
+            </div>
+          }
         }
       </section>
 
