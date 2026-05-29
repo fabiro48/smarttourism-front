@@ -34,6 +34,11 @@
           }
         </span>
       }
+      @if (reservationDate.errors?.['wrongDay']) {
+        <span class="error-msg">
+          Debes seleccionar una fecha que caiga en día {{ scheduleDayLabel }}
+        </span>
+      }
     </div>
 
     <!-- Cantidad -->

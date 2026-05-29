@@ -25,9 +25,33 @@ export class ReservationFormComponent implements OnInit {
   scheduleId = '';
   experienceTitle = '';
   scheduleInfo = '';
+  scheduleDayOfWeek = '';
+  scheduleDayLabel = '';
   unitPrice = 0;
   isSubmitting = false;
   errorMessage = '';
+
+  /** Mapa de día de la semana en inglés a número JS (0=domingo, 1=lunes, ...) */
+  private dayOfWeekMap: Record<string, number> = {
+    SUNDAY: 0,
+    MONDAY: 1,
+    TUESDAY: 2,
+    WEDNESDAY: 3,
+    THURSDAY: 4,
+    FRIDAY: 5,
+    SATURDAY: 6,
+  };
+
+  /** Mapa de día de la semana en inglés a español */
+  private dayOfWeekLabelMap: Record<string, string> = {
+    SUNDAY: 'Domingo',
+    MONDAY: 'Lunes',
+    TUESDAY: 'Martes',
+    WEDNESDAY: 'Miércoles',
+    THURSDAY: 'Jueves',
+    FRIDAY: 'Viernes',
+    SATURDAY: 'Sábado',
+  };
 
   get reservationDate() {
     return this.form.get('reservationDate')!;
@@ -49,6 +73,10 @@ export class ReservationFormComponent implements OnInit {
     this.experienceTitle = params['experienceTitle'] || '';
     this.scheduleInfo = params['scheduleInfo'] || '';
     this.unitPrice = params['pricePerPerson'] ? +params['pricePerPerson'] : 0;
+
+    // Extraer el día de la semana del scheduleInfo (formato: "MONDAY 08:00 - 10:00")
+    this.scheduleDayOfWeek = this.scheduleInfo.split(' ')[0]?.toUpperCase() || '';
+    this.scheduleDayLabel = this.dayOfWeekLabelMap[this.scheduleDayOfWeek] || this.scheduleDayOfWeek;
 
     this.initForm();
   }
@@ -84,7 +112,7 @@ export class ReservationFormComponent implements OnInit {
 
   private initForm(): void {
     this.form = this.fb.group({
-      reservationDate: ['', [Validators.required, this.futureDateValidator]],
+      reservationDate: ['', [Validators.required, this.futureDateValidator, this.dayOfWeekValidator.bind(this)]],
       quantity: [1, [Validators.required, Validators.min(1)]],
     });
   }
@@ -98,6 +126,21 @@ export class ReservationFormComponent implements OnInit {
     const selectedDate = new Date(control.value + 'T00:00:00');
     if (selectedDate <= today) {
       return { futureDate: true };
+    }
+    return null;
+  }
+
+  private dayOfWeekValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value || !this.scheduleDayOfWeek) {
+      return null;
+    }
+    const selectedDate = new Date(control.value + 'T00:00:00');
+    const expectedDay = this.dayOfWeekMap[this.scheduleDayOfWeek];
+    if (expectedDay === undefined) {
+      return null;
+    }
+    if (selectedDate.getDay() !== expectedDay) {
+      return { wrongDay: true };
     }
     return null;
   }
